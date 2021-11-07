@@ -29,6 +29,7 @@ namespace Ambiesoft.gui4cmd
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnOK = new System.Windows.Forms.Button();
             this.tabRoot = new System.Windows.Forms.TabControl();
             this.tbOutput = new System.Windows.Forms.TabPage();
@@ -36,6 +37,7 @@ namespace Ambiesoft.gui4cmd
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.txtError = new System.Windows.Forms.TextBox();
             this.panelRoot = new System.Windows.Forms.Panel();
+            this.timerToControl = new System.Windows.Forms.Timer(this.components);
             this.tabRoot.SuspendLayout();
             this.panelRoot.SuspendLayout();
             this.SuspendLayout();
@@ -76,7 +78,7 @@ namespace Ambiesoft.gui4cmd
             this.tbError.Location = new System.Drawing.Point(4, 22);
             this.tbError.Name = "tbError";
             this.tbError.Padding = new System.Windows.Forms.Padding(3);
-            this.tbError.Size = new System.Drawing.Size(402, 117);
+            this.tbError.Size = new System.Drawing.Size(190, 56);
             this.tbError.TabIndex = 1;
             this.tbError.Text = "Error";
             this.tbError.UseVisualStyleBackColor = true;
@@ -110,6 +112,11 @@ namespace Ambiesoft.gui4cmd
             this.panelRoot.Size = new System.Drawing.Size(694, 345);
             this.panelRoot.TabIndex = 0;
             // 
+            // timerToControl
+            // 
+            this.timerToControl.Enabled = true;
+            this.timerToControl.Tick += new System.EventHandler(this.timerToControl_Tick);
+            // 
             // FormMain
             // 
             this.AcceptButton = this.btnOK;
@@ -137,6 +144,7 @@ namespace Ambiesoft.gui4cmd
         private System.Windows.Forms.TextBox txtOutput;
         private System.Windows.Forms.TextBox txtError;
         private System.Windows.Forms.Panel panelRoot;
+        private System.Windows.Forms.Timer timerToControl;
     }
 }
 
