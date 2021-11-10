@@ -12,10 +12,12 @@ using System.Windows.Forms;
 
 namespace Ambiesoft.gui4cmd
 {
-    public partial class FormMain : Form
+    public partial class FormMain : Form, IThread2Main
     {
         Thread _thCmd;
+        Process _process;
         delegate void AddToLog(string txt);
+        volatile int _currentSessID;
 
         Queue<string> _outputs = new Queue<string>();
         Queue<string> _errors = new Queue<string>();
@@ -43,20 +45,26 @@ namespace Ambiesoft.gui4cmd
             ApplyOutputsByOne();
         }
         [MethodImpl(MethodImplOptions.Synchronized)]
-        void AddToOutputs(string txt)
+        void AddToOutputs(int sessID, string txt)
         {
+            if (sessID != _currentSessID)
+                return;
             _outputs.Enqueue(txt);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        void AddToErrors(string txt)
+        void AddToErrors(int sessID, string txt)
         {
+            if (sessID != _currentSessID)
+                return;
             _errors.Enqueue(txt);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         void ApplyOutputsByOne()
         {
+            if (!IsFormAlive)
+                return;
             if (_outputs.Count != 0)
             {
                 txtOutput.AppendText(_outputs.Dequeue());
@@ -70,8 +78,11 @@ namespace Ambiesoft.gui4cmd
             }
         }
         [MethodImpl(MethodImplOptions.Synchronized)]
-        void ApplyOutputsAll()
+        void ApplyOutputsAll(int sessID)
         {
+            if (sessID != _currentSessID)
+                return;
+
             {
                 StringBuilder sbOutputs = new StringBuilder();
                 while (_outputs.Count != 0)
@@ -97,6 +108,7 @@ namespace Ambiesoft.gui4cmd
         }
         void StartOfThread(object obj)
         {
+            ThreadData threadData = (ThreadData)obj;
             int retval;
             Process pro;
             try
@@ -112,7 +124,7 @@ namespace Ambiesoft.gui4cmd
                             return;
                         if (e.Data == null)
                             return;
-                        AddToOutputs(e.Data);
+                        AddToOutputs(threadData.SessID, e.Data);
                     }),
                     new DataReceivedEventHandler(delegate (object sender, DataReceivedEventArgs e)
                     {
@@ -120,30 +132,66 @@ namespace Ambiesoft.gui4cmd
                             return;
                         if (e.Data == null)
                             return;
-                        AddToErrors(e.Data);
+                        AddToErrors(threadData.SessID, e.Data);
                     }),
 
-                    new EventHandler(delegate (object sender, EventArgs e) { }),
+                    new EventHandler(delegate (object sender, EventArgs e) {
+                        // sender is process
+                        threadData.OnProcessCreated((Process)sender);
+                    }),
                     out pro);
             }
             catch(Exception)
             {
 
             }
-            this.BeginInvoke(new EventHandler(delegate (object sender, EventArgs e)
+
+            if (IsFormAlive && threadData.ShouldThreadAlive)
             {
-                // Thead Finished
-                ApplyOutputsAll();
-                timerToControl.Enabled = false;
-            }), this, null);
+                this.BeginInvoke(new EventHandler(delegate (object sender, EventArgs e)
+                {
+                    // Thead Finished
+                    ApplyOutputsAll(threadData.SessID);
+                    timerToControl.Enabled = false;
+                }), this, null);
+            }
         }
             
         private void FormMain_Load(object sender, EventArgs e)
         {
             _thCmd = new Thread(new ParameterizedThreadStart(StartOfThread));
-            _thCmd.Start(null);
+            _thCmd.Start(new ThreadData(++_currentSessID, this));
         }
 
+        int IThread2Main.GetCurrentSessID()
+        {
+            return _currentSessID;
+        }
 
+        void OnProcessCreatedStuff(int sessID, Process process)
+        {
+            if (sessID != _currentSessID)
+                return;
+            _process = process;
+        }
+        void IThread2Main.OnProcessCreated(int sessID, Process process)
+        {
+            if (this.InvokeRequired)
+            {
+                EndInvoke(this.BeginInvoke(new Action(() => OnProcessCreatedStuff(sessID, process))));
+                return;
+            }
+            OnProcessCreatedStuff(sessID, process);
+        }
+
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(_process!=null && !_process.HasExited)
+            {
+                ++_currentSessID;
+                _process.Kill();
+                _thCmd.Join();
+            }
+        }
     }
 }

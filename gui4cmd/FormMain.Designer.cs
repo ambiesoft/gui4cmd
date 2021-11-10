@@ -46,9 +46,9 @@ namespace Ambiesoft.gui4cmd
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(631, 363);
+            this.btnOK.Location = new System.Drawing.Point(631, 335);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.Size = new System.Drawing.Size(75, 21);
             this.btnOK.TabIndex = 0;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
@@ -57,10 +57,10 @@ namespace Ambiesoft.gui4cmd
             // 
             this.tabRoot.Controls.Add(this.tbOutput);
             this.tabRoot.Controls.Add(this.tbError);
-            this.tabRoot.Location = new System.Drawing.Point(85, 16);
+            this.tabRoot.Location = new System.Drawing.Point(85, 15);
             this.tabRoot.Name = "tabRoot";
             this.tabRoot.SelectedIndex = 0;
-            this.tabRoot.Size = new System.Drawing.Size(198, 82);
+            this.tabRoot.Size = new System.Drawing.Size(198, 76);
             this.tabRoot.TabIndex = 1;
             // 
             // tbOutput
@@ -68,7 +68,7 @@ namespace Ambiesoft.gui4cmd
             this.tbOutput.Location = new System.Drawing.Point(4, 22);
             this.tbOutput.Name = "tbOutput";
             this.tbOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tbOutput.Size = new System.Drawing.Size(190, 56);
+            this.tbOutput.Size = new System.Drawing.Size(190, 50);
             this.tbOutput.TabIndex = 0;
             this.tbOutput.Text = "Output";
             this.tbOutput.UseVisualStyleBackColor = true;
@@ -78,25 +78,29 @@ namespace Ambiesoft.gui4cmd
             this.tbError.Location = new System.Drawing.Point(4, 22);
             this.tbError.Name = "tbError";
             this.tbError.Padding = new System.Windows.Forms.Padding(3);
-            this.tbError.Size = new System.Drawing.Size(190, 56);
+            this.tbError.Size = new System.Drawing.Size(190, 50);
             this.tbError.TabIndex = 1;
             this.tbError.Text = "Error";
             this.tbError.UseVisualStyleBackColor = true;
             // 
             // txtOutput
             // 
-            this.txtOutput.Location = new System.Drawing.Point(200, 117);
+            this.txtOutput.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOutput.Location = new System.Drawing.Point(200, 108);
             this.txtOutput.Multiline = true;
             this.txtOutput.Name = "txtOutput";
-            this.txtOutput.Size = new System.Drawing.Size(108, 51);
+            this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtOutput.Size = new System.Drawing.Size(108, 47);
             this.txtOutput.TabIndex = 0;
             // 
             // txtError
             // 
-            this.txtError.Location = new System.Drawing.Point(23, 104);
+            this.txtError.Font = new System.Drawing.Font("Consolas", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtError.Location = new System.Drawing.Point(23, 96);
             this.txtError.Multiline = true;
             this.txtError.Name = "txtError";
-            this.txtError.Size = new System.Drawing.Size(129, 74);
+            this.txtError.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtError.Size = new System.Drawing.Size(129, 69);
             this.txtError.TabIndex = 2;
             // 
             // panelRoot
@@ -107,9 +111,9 @@ namespace Ambiesoft.gui4cmd
             this.panelRoot.Controls.Add(this.tabRoot);
             this.panelRoot.Controls.Add(this.txtOutput);
             this.panelRoot.Controls.Add(this.txtError);
-            this.panelRoot.Location = new System.Drawing.Point(12, 12);
+            this.panelRoot.Location = new System.Drawing.Point(12, 11);
             this.panelRoot.Name = "panelRoot";
-            this.panelRoot.Size = new System.Drawing.Size(694, 345);
+            this.panelRoot.Size = new System.Drawing.Size(694, 318);
             this.panelRoot.TabIndex = 0;
             // 
             // timerToControl
@@ -120,13 +124,14 @@ namespace Ambiesoft.gui4cmd
             // FormMain
             // 
             this.AcceptButton = this.btnOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(718, 398);
+            this.ClientSize = new System.Drawing.Size(718, 367);
             this.Controls.Add(this.panelRoot);
             this.Controls.Add(this.btnOK);
             this.Name = "FormMain";
             this.Text = "FormMain";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.tabRoot.ResumeLayout(false);
             this.panelRoot.ResumeLayout(false);
